@@ -1,7 +1,6 @@
 package tech.constanta.android.delegates.sample.ui.catalog.details
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -10,21 +9,19 @@ import kotlinx.coroutines.launch
 import tech.constanta.android.delegates.sample.domain.CartInteractor
 import tech.constanta.android.delegates.sample.domain.catalog.CatalogInteractor
 import tech.constanta.android.delegates.sample.domain.catalog.model.CatalogItem
-import tech.constanta.android.delegates.sample.domain.model.CartItem
+import tech.constanta.android.delegates.sample.ui.cart.BaseCartViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class CatalogDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val catalogInteractor: CatalogInteractor,
-    private val cartInteractor: CartInteractor,
-) : ViewModel() {
+    cartInteractor: CartInteractor,
+) : BaseCartViewModel(cartInteractor) {
 
     private var catalogItem: CatalogItem? = null
     private val _itemInfo: MutableStateFlow<String> = MutableStateFlow("")
     val itemInfo: Flow<String> = _itemInfo
-    val cartItems: Flow<List<CartItem>> = cartInteractor.cartItems
-    val cartItemsCount: Flow<Int> = cartInteractor.totalItemsCount
 
     init {
         viewModelScope.launch {
@@ -38,16 +35,9 @@ class CatalogDetailsViewModel @Inject constructor(
     }
 
     fun addToCart() {
-        viewModelScope.launch {
-            catalogItem?.also {
-                cartInteractor.addCatalogItem(it)
-            }
+        catalogItem?.also {
+            addToCart(it)
         }
     }
 
-    fun removeCartItem(item: CartItem) {
-        viewModelScope.launch {
-            cartInteractor.removeCartItem(item)
-        }
-    }
 }
