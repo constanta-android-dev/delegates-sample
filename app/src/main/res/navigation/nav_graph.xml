@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/CatalogListFragment">
+
+    <fragment
+        android:id="@+id/CatalogListFragment"
+        android:name="tech.constanta.android.delegates.sample.ui.catalog.list.CatalogListFragment"
+        android:label="@string/catalog_list_label"
+        tools:layout="@layout/fragment_catalog_list">
+
+        <action
+            android:id="@+id/action_CatalogListFragment_to_CatalogDetailsFragment"
+            app:destination="@id/CatalogDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/CatalogDetailsFragment"
+        android:name="tech.constanta.android.delegates.sample.ui.catalog.details.CatalogDetailsFragment"
+        android:label="@string/catalog_details_label"
+        tools:layout="@layout/fragment_catalog_details">
+        <argument
+            android:name="catalog_item_id"
+            app:argType="string"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/action_CatalogDetailsFragment_to_CatalogDetailsFragment"
+            app:destination="@id/CatalogListFragment">
+
+        </action>
+    </fragment>
+</navigation>
