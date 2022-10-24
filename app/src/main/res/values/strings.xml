@@ -11,4 +11,6 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="cart_title">Корзина</string>
     <string name="cart_close">закрыть</string>
+    <string name="action_sign_up">Register</string>
+    <string name="action_sign_in">Enter</string>
 </resources>
