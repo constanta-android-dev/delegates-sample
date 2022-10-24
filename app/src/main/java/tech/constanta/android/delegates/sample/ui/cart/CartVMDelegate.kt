@@ -7,21 +7,31 @@ import kotlinx.coroutines.launch
 import tech.constanta.android.delegates.sample.domain.CartInteractor
 import tech.constanta.android.delegates.sample.domain.catalog.model.CatalogItem
 import tech.constanta.android.delegates.sample.domain.model.CartItem
+import javax.inject.Inject
 
-abstract class BaseCartViewModel(
+interface CartVMDelegate {
+    val cartItems: Flow<List<CartItem>>
+    val cartItemsCount: Flow<Int>
+
+    fun addToCart(item: CatalogItem)
+
+    fun removeCartItem(item: CartItem)
+}
+
+class CartVMDelegateImpl @Inject constructor(
     private val cartInteractor: CartInteractor,
-) : ViewModel() {
+) : ViewModel(), CartVMDelegate {
 
-    val cartItems: Flow<List<CartItem>> = cartInteractor.cartItems
-    val cartItemsCount: Flow<Int> = cartInteractor.totalItemsCount
+    override val cartItems: Flow<List<CartItem>> = cartInteractor.cartItems
+    override val cartItemsCount: Flow<Int> = cartInteractor.totalItemsCount
 
-    fun addToCart(item: CatalogItem) {
+    override fun addToCart(item: CatalogItem) {
         viewModelScope.launch {
             cartInteractor.addCatalogItem(item)
         }
     }
 
-    fun removeCartItem(item: CartItem) {
+    override fun removeCartItem(item: CartItem) {
         viewModelScope.launch {
             cartInteractor.removeCartItem(item)
         }

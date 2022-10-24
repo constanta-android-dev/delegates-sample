@@ -7,25 +7,34 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import tech.constanta.android.delegates.sample.domain.auth.AuthInteractor
 import tech.constanta.android.delegates.sample.domain.auth.model.AuthState
+import javax.inject.Inject
 
-abstract class BaseAuthControlsViewModel(
+interface AuthControlsVMDelegate {
+
+    val authControlsState: Flow<AuthControlsState>
+    fun onSignUpClick()
+
+    fun onSignInClick()
+}
+
+class AuthControlsVMDelegateImpl @Inject constructor(
     private val authInteractor: AuthInteractor
-) : ViewModel() {
+) : ViewModel(), AuthControlsVMDelegate {
 
-    val authControlsState: Flow<AuthControlsState> = authInteractor.authState.map {
+    override val authControlsState: Flow<AuthControlsState> = authInteractor.authState.map {
         when (it) {
             AuthState.AUTHORIZED -> AuthControlsState.UNAVAILABLE
             AuthState.UNAUTHORIZED -> AuthControlsState.AVAILABLE
         }
     }
 
-    fun onSignUpClick() {
+    override fun onSignUpClick() {
         viewModelScope.launch {
             authInteractor.auth()
         }
     }
 
-    fun onSignInClick() {
+    override fun onSignInClick() {
         viewModelScope.launch {
             authInteractor.auth()
         }
